@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Payment Animation</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: transparent;
+    }
+    
+    .animation-container {
+      --blue-7: #3e626e;
+      --blue-8: #547985;
+      --green-primary: #3D9A50;
+      --green-light: #DFFFD0;
+      
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .loan-system-box, .payment-system-box {
+      position: absolute;
+      width: 140px;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #e0e0e0;
+      z-index: 2;
+    }
+    
+    .loan-system-box {
+      left: 20px;
+      top: 20px;
+      background-color: #f0f7fa;
+    }
+    
+    .payment-system-box {
+      right: 20px;
+      top: 20px;
+      background-color: #f0f8f0;
+    }
+    
+    .system-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .system-title {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .loan-system-box .system-title {
+      color: var(--blue-8);
+    }
+    
+    .payment-system-box .system-title {
+      color: var(--green-primary);
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .loan-system-box .status-dot {
+      background-color: var(--blue-7);
+    }
+    
+    .payment-system-box .status-dot {
+      background-color: var(--green-primary);
+    }
+    
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .grid-item {
+      height: 8px;
+      border-radius: 2px;
+      width: 0;
+      transition: width 0.3s ease;
+    }
+    
+    .grid-item.active {
+      width: 100%;
+    }
+    
+    .loan-system-box .grid-item {
+      background-color: #e0ebf0;
+    }
+    
+    .payment-system-box .grid-item {
+      background-color: #e0f0e0;
+    }
+    
+    .progress-container {
+      height: 24px;
+      padding: 0 4px;
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+    }
+    
+    .loan-system-box .progress-container {
+      background-color: #e0ebf0;
+    }
+    
+    .payment-system-box .progress-container {
+      background-color: #e0f0e0;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 4px;
+    }
+    
+    .loan-system-box .progress-fill {
+      background-color: var(--blue-8);
+      animation: loanProgress 4s infinite;
+    }
+    
+    .payment-system-box .progress-fill {
+      background-color: var(--green-primary);
+      animation: paymentProgress 5s infinite;
+    }
+    
+    @keyframes loanProgress {
+      0% { width: 0; }
+      50% { width: 100%; }
+      100% { width: 0; }
+    }
+    
+    @keyframes paymentProgress {
+      0% { width: 0; }
+      20% { width: 100%; }
+      100% { width: 100%; }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .status-dot {
+      animation: pulse 1s infinite;
+    }
+    
+    .content-area {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -33%);
+      z-index: 3;
+    }
+    
+    .stage-box {
+      background-color: white;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #e0e0e0;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .loan-details {
+      display: flex;
+      align-items: center;
+    }
+    
+    .loan-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      color: var(--blue-8);
+      margin-right: 12px;
+    }
+    
+    .loan-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .loan-name {
+      font-weight: 500;
+      color: #000000;
+    }
+    
+    .loan-amount {
+      color: var(--blue-7);
+      font-weight: 500;
+    }
+    
+    .processing {
+      width: 160px;
+      text-align: center;
+    }
+    
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--blue-8);
+      border-top-color: transparent;
+      margin: 0 auto 12px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .processing-text {
+      font-weight: 500;
+      font-size: 14px;
+      color: #000000;
+    }
+    
+    .status-update {
+      display: flex;
+      align-items: center;
+    }
+    
+    .status-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+    }
+    
+    .triggered .status-icon {
+      color: var(--blue-7);
+    }
+    
+    .received .status-icon {
+      color: var(--green-primary);
+    }
+    
+    .success .status-icon {
+      color: var(--green-primary);
+    }
+    
+    .status-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .status-title {
+      font-weight: 500;
+      font-size: 14px;
+      color: #000000;
+    }
+    
+    .status-subtitle {
+      font-size: 12px;
+    }
+    
+    .triggered .status-subtitle,
+    .received .status-subtitle {
+      color: var(--blue-7);
+    }
+    
+    .success {
+      background-color: rgba(223, 255, 208, 0.3);
+      border-color: var(--green-primary);
+    }
+    
+    .success .status-subtitle {
+      color: var(--green-primary);
+      font-weight: 500;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="animation-container" id="loan-animation-container"></div>
+  
+  <script>
+    function buildAnimation() {
+      const container = document.getElementById('loan-animation-container');
+      if (!container) return;
+      
+      // Loan System Box
+      const loanSystem = document.createElement('div');
+      loanSystem.className = 'loan-system-box';
+      loanSystem.innerHTML = `
+        <div class="system-header">
+          <span class="system-title">Loan System</span>
+          <div class="status-dot"></div>
+        </div>
+        <div class="system-grid">
+          ${Array(6).fill('<div class="grid-item"></div>').join('')}
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      `;
+      container.appendChild(loanSystem);
+      
+      // Payment System Box
+      const paymentSystem = document.createElement('div');
+      paymentSystem.className = 'payment-system-box';
+      paymentSystem.innerHTML = `
+        <div class="system-header">
+          <span class="system-title">Payment System</span>
+          <div class="status-dot"></div>
+        </div>
+        <div class="system-grid">
+          ${Array(6).fill('<div class="grid-item"></div>').join('')}
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      `;
+      container.appendChild(paymentSystem);
+      
+      // Content Area
+      const contentArea = document.createElement('div');
+      contentArea.className = 'content-area';
+      
+      // Stage 1: Loan Details
+      const loanDetails = document.createElement('div');
+      loanDetails.className = 'stage-box loan-details';
+      loanDetails.innerHTML = `
+        <div class="loan-icon">EL</div>
+        <div class="loan-info">
+          <div class="loan-name">Emma's Loan</div>
+          <div class="loan-amount">£1,500</div>
+        </div>
+      `;
+      contentArea.appendChild(loanDetails);
+      
+      // Stage 2: Processing
+      const processing = document.createElement('div');
+      processing.className = 'stage-box processing';
+      processing.style.display = 'none';
+      processing.innerHTML = `
+        <div class="spinner"></div>
+        <div class="processing-text">Processing loan</div>
+      `;
+      contentArea.appendChild(processing);
+      
+      // Stage 3: Triggered
+      const triggered = document.createElement('div');
+      triggered.className = 'stage-box status-update triggered';
+      triggered.style.display = 'none';
+      triggered.innerHTML = `
+        <div class="status-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="status-info">
+          <div class="status-title">Payment triggered</div>
+          <div class="status-subtitle">Processing...</div>
+        </div>
+      `;
+      contentArea.appendChild(triggered);
+      
+      // Stage 4: Received
+      const received = document.createElement('div');
+      received.className = 'stage-box status-update received';
+      received.style.display = 'none';
+      received.innerHTML = `
+        <div class="status-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 12L9 18L21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="status-info">
+          <div class="status-title">Payment received</div>
+          <div class="status-subtitle">Finalising...</div>
+        </div>
+      `;
+      contentArea.appendChild(received);
+      
+      // Stage 5: Success
+      const success = document.createElement('div');
+      success.className = 'stage-box status-update success';
+      success.style.display = 'none';
+      success.innerHTML = `
+        <div class="status-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="status-info">
+          <div class="status-title">Payout successful</div>
+          <div class="status-subtitle">Completed</div>
+        </div>
+      `;
+      contentArea.appendChild(success);
+      
+      container.appendChild(contentArea);
+      
+      return {
+        loanSystem,
+        paymentSystem,
+        stages: {
+          loanDetails,
+          processing,
+          triggered,
+          received,
+          success
+        }
+      };
+    }
+    
+    function initAnimation() {
+      const elements = buildAnimation();
+      if (!elements) return;
+      
+      const { loanSystem, paymentSystem, stages } = elements;
+      let currentStage = 0;
+      
+      // Grid animations
+      setTimeout(() => {
+        const loanGridItems = loanSystem.querySelectorAll('.grid-item');
+        loanGridItems.forEach((item, i) => {
+          setTimeout(() => item.classList.add('active'), i * 100);
+        });
+        
+        const paymentGridItems = paymentSystem.querySelectorAll('.grid-item');
+        paymentGridItems.forEach((item, i) => {
+          setTimeout(() => item.classList.add('active'), 500 + i * 100);
+        });
+      }, 500);
+      
+      // Stage transitions
+      const allStages = [
+        stages.loanDetails,
+        stages.processing,
+        stages.triggered,
+        stages.received,
+        stages.success
+      ];
+      
+      function showStage(index) {
+        // Hide all stages
+        allStages.forEach(stage => stage.style.display = 'none');
+        
+        // Show the current stage
+        allStages[index].style.display = index === 0 ? 'flex' : 
+                                       (index === 1 ? 'block' : 'flex');
+      }
+      
+      // Start with first stage
+      showStage(0);
+      
+      // Progress through stages
+      setInterval(() => {
+        currentStage = (currentStage + 1) % 5;
+        showStage(currentStage);
+      }, 4000);
+    }
+    
+    // Initialize when DOM is fully loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAnimation);
+    } else {
+      initAnimation();
+    }
+  </script>
+</body>
+</html>
