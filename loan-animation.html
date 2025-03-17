@@ -323,62 +323,84 @@
     }
     
     /* Media queries for responsiveness */
-    @media (max-width: 480px) {
-      .loan-system-box, .payment-system-box {
-        padding: 8px;
-        min-width: 90px;
-      }
-      
-      .system-title {
-        font-size: 10px;
-      }
-      
-      .status-dot {
-        width: 4px;
-        height: 4px;
-      }
-      
-      .grid-item {
-        height: 6px;
-      }
-      
-      .progress-container {
-        height: 18px;
-      }
-      
-      .progress-bar {
-        height: 6px;
-      }
-      
-      .loan-icon {
-        width: 36px;
-        height: 36px;
-        margin-right: 8px;
-      }
-      
-      .status-icon {
-        width: 28px;
-        height: 28px;
-      }
-      
-      .stage-box {
-        padding: 10px;
-      }
-      
-      .loan-name, .status-title {
-        font-size: 13px;
-      }
-      
-      .loan-amount, .status-subtitle {
-        font-size: 11px;
-      }
-    }
-    
-    @media (max-width: 380px) {
-      .content-area {
-        transform: translate(-50%, -40%);
-      }
-    }
+    /* Media queries for responsiveness */
+@media (max-width: 480px) {
+  /* Add these new lines for mobile positioning */
+  .loan-system-box {
+    left: 2%; /* Moved from 5% to 2% */
+  }
+  
+  .payment-system-box {
+    right: 2%; /* Moved from 5% to 2% */
+  }
+  
+  /* Keep existing mobile styling */
+  .loan-system-box, .payment-system-box {
+    padding: 8px;
+    min-width: 90px;
+  }
+  
+  .system-title {
+    font-size: 10px;
+  }
+  
+  .status-dot {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .grid-item {
+    height: 6px;
+  }
+  
+  .progress-container {
+    height: 18px;
+  }
+  
+  .progress-bar {
+    height: 6px;
+  }
+  
+  .loan-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+  }
+  
+  .status-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .stage-box {
+    padding: 10px;
+  }
+  
+  .loan-name, .status-title {
+    font-size: 13px;
+  }
+  
+  .loan-amount, .status-subtitle {
+    font-size: 11px;
+  }
+}
+
+/* For very small screens, bring boxes even closer */
+@media (max-width: 380px) {
+  .loan-system-box {
+    left: 1%; /* Even closer on very small screens */
+    min-width: 80px; /* Slightly smaller minimum width */
+  }
+  
+  .payment-system-box {
+    right: 1%; /* Even closer on very small screens */
+    min-width: 80px; /* Slightly smaller minimum width */
+  }
+  
+  .content-area {
+    transform: translate(-50%, -40%);
+  }
+}
   </style>
 </head>
 <body>
