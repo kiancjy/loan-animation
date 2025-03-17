@@ -33,13 +33,9 @@
       --restart-delay: 2000ms; /* 2 second delay before restart */
     }
 
-    html, body {
-      background-color: transparent;
-      height: 100%;
-      overflow: hidden; /* Prevent scrolling inside iframe */
-    }
-
     body {
+      background-color: transparent;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -48,8 +44,12 @@
 
     .loan-animation-container {
       width: 100%;
-      max-width: 700px; /* Increased max-width */
+      max-width: 48rem;
       margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .loans-list {
@@ -68,7 +68,6 @@
       border-radius: 0.5rem;
       border: 1px solid var(--blue-8);
       transition: all var(--transition-duration) ease-in-out;
-      max-width: 100%; /* Ensure it doesn't overflow */
     }
 
     .loan-card.paid {
@@ -80,8 +79,6 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      flex: 1; /* Take available space */
-      min-width: 0; /* Allow child elements to shrink */
     }
 
     .avatar {
@@ -96,7 +93,6 @@
       align-items: center;
       justify-content: center;
       transition: all var(--transition-duration) ease-in-out;
-      flex-shrink: 0; /* Prevent shrinking */
     }
 
     .loan-card.paid .avatar {
@@ -106,23 +102,18 @@
     .name {
       font-weight: 500;
       color: var(--blue-2);
-      white-space: nowrap; /* Keep name on single line */
-      overflow: hidden;
-      text-overflow: ellipsis; /* Add ellipsis if name is too long */
     }
 
     .loan-right {
       display: flex;
       align-items: center;
       gap: 1.25rem;
-      flex-shrink: 0; /* Prevent shrinking */
     }
 
     .amount {
       font-size: 1.125rem;
       font-weight: 600;
       color: var(--blue-4);
-      white-space: nowrap; /* Keep amount on single line */
     }
 
     .status {
@@ -139,7 +130,6 @@
       transition: all var(--transition-duration) ease-in-out;
       position: relative;
       overflow: hidden;
-      white-space: nowrap; /* Keep status text on single line */
     }
 
     .loan-card.paid .status {
@@ -150,7 +140,6 @@
     .status-icon {
       margin-right: 0.5rem;
       transition: all var(--transition-duration) ease-in-out;
-      flex-shrink: 0; /* Prevent shrinking */
     }
 
     .status-pulse {
@@ -183,7 +172,6 @@
       100% { opacity: 0; }
     }
 
-    /* Media query for smaller screens */
     @media (max-width: 640px) {
       .loan-card {
         padding: 1rem;
@@ -197,7 +185,6 @@
 
       .name {
         font-size: 0.875rem;
-        max-width: 90px; /* Limit name width on small screens */
       }
 
       .loan-right {
@@ -212,28 +199,6 @@
         min-width: 5.5rem;
         padding: 0.25rem 0.5rem;
         font-size: 0.75rem;
-      }
-    }
-
-    /* For very small screens - stack the layout */
-    @media (max-width: 460px) {
-      .loan-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-      }
-
-      .loan-left {
-        width: 100%;
-      }
-
-      .name {
-        max-width: none; /* No limit on name width when stacked */
-      }
-
-      .loan-right {
-        width: 100%;
-        justify-content: space-between;
       }
     }
   </style>
@@ -374,16 +339,6 @@
       renderLoans();
       animateLoans();
     });
-
-    // Send height information to parent (for responsive iframe sizing)
-    function sendHeight() {
-      const height = document.body.scrollHeight;
-      window.parent.postMessage({ type: 'resize', height: height }, '*');
-    }
-
-    // Send height after rendering
-    window.addEventListener('load', sendHeight);
-    window.addEventListener('resize', sendHeight);
   </script>
 </body>
 </html>
