@@ -328,10 +328,10 @@
         renderLoans();
       }, 3000);
 
-      // Reset animation after a total of 5.5 seconds (3 seconds for animation + 2.5 seconds pause)
+      // Reset animation after a total of 5 seconds (3 seconds for animation + 2 seconds pause)
       setTimeout(() => {
         setTimeout(animateLoans, 0); // Restart immediately after the pause
-      }, 5500); // 3 seconds for the animation + 2.5 seconds pause
+      }, 5000); // 3 seconds for the animation + 2 seconds pause
     }
 
     // Start the animation when the page loads
