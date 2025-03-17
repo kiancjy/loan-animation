@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Verification Animation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    :root {
+      --blue-1: #000;
+      --blue-2: #0b1316;
+      --blue-3: #10262d;
+      --blue-4: #11343f;
+      --blue-5: #1d424d;
+      --blue-6: #2c505c;
+      --blue-7: #3e626e;
+      --blue-8: #547985;
+      --blue-9: #142a31;
+      --blue-10: #1c404c;
+      --blue-11: #9ac1cf;
+      --blue-12: #c7eaf5;
+
+      --green-primary: #3D9A50;
+      --green-light: #DFFFD0;
+
+      --transition-duration: 1000ms; /* 1 second transition */
+      --restart-delay: 2000ms; /* 2 second delay before restart */
+    }
+
+    body {
+      background-color: transparent;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .loan-animation-container {
+      width: 100%;
+      max-width: 48rem;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loans-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .loan-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: white;
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--blue-8);
+      transition: all var(--transition-duration) ease-in-out;
+    }
+
+    .loan-card.paid {
+      border-color: var(--green-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .loan-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 9999px;
+      background-color: var(--blue-7);
+      color: white;
+      font-weight: 500;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-duration) ease-in-out;
+    }
+
+    .loan-card.paid .avatar {
+      background-color: var(--green-primary);
+    }
+
+    .name {
+      font-weight: 500;
+      color: var(--blue-2);
+    }
+
+    .loan-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .amount {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--blue-4);
+    }
+
+    .status {
+      min-width: 6.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--blue-11);
+      color: var(--blue-9);
+      transition: all var(--transition-duration) ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loan-card.paid .status {
+      background-color: var(--green-light);
+      color: var(--green-primary);
+    }
+
+    .status-icon {
+      margin-right: 0.5rem;
+      transition: all var(--transition-duration) ease-in-out;
+    }
+
+    .status-pulse {
+      position: absolute;
+      inset: 0;
+      background-color: var(--green-primary);
+      opacity: 0;
+      border-radius: 0.375rem;
+      animation: pulse-fade 3s ease-in-out infinite;
+    }
+
+    .status-text {
+      position: relative;
+      z-index: 10;
+      transition: all var(--transition-duration) ease-in-out;
+    }
+
+    /* Transition container for pending/paid text */
+    .status-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    @keyframes pulse-fade {
+      0% { opacity: 0; }
+      50% { opacity: 0.08; }
+      100% { opacity: 0; }
+    }
+
+    @media (max-width: 640px) {
+      .loan-card {
+        padding: 1rem;
+      }
+
+      .avatar {
+        height: 2rem;
+        width: 2rem;
+        font-size: 0.75rem;
+      }
+
+      .name {
+        font-size: 0.875rem;
+      }
+
+      .loan-right {
+        gap: 0.75rem;
+      }
+
+      .amount {
+        font-size: 1rem;
+      }
+
+      .status {
+        min-width: 5.5rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loan-animation-container">
+    <div class="loans-list" id="loans-list">
+      <!-- Loan cards will be generated here by JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Loan data
+    const loans = [
+      {
+        id: 1,
+        name: 'Alex Johnson',
+        amount: '£5,200',
+        status: 'pending',
+        initials: 'AJ'
+      },
+      {
+        id: 2,
+        name: 'Sarah Williams',
+        amount: '£3,750',
+        status: 'pending',
+        initials: 'SW'
+      },
+      {
+        id: 3,
+        name: 'Michael Smith',
+        amount: '£8,100',
+        status: 'pending',
+        initials: 'MS'
+      }
+    ];
+
+    // Generate HTML for loans
+    function renderLoans() {
+      const loansList = document.getElementById('loans-list');
+
+      // Create the cards if they don't exist yet
+      if (loansList.children.length === 0) {
+        loans.forEach(loan => {
+          const loanCard = document.createElement('div');
+          loanCard.className = 'loan-card';
+          loanCard.id = `loan-${loan.id}`;
+
+          loanCard.innerHTML = `
+            <div class="loan-left">
+              <div class="avatar">${loan.initials}</div>
+              <div class="name">${loan.name}</div>
+            </div>
+            <div class="loan-right">
+              <div class="amount">${loan.amount}</div>
+              <div class="status" id="status-${loan.id}">
+                <div class="status-container">
+                  <svg class="status-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"></path>
+                    <path d="M12 6V12L16 14"></path>
+                  </svg>
+                  <span class="status-text">Pending</span>
+                </div>
+              </div>
+            </div>
+          `;
+
+          loansList.appendChild(loanCard);
+        });
+      }
+
+      // Update the status without full re-render
+      loans.forEach(loan => {
+        const loanCard = document.getElementById(`loan-${loan.id}`);
+        const statusEl = document.getElementById(`status-${loan.id}`);
+
+        if (loan.status === 'paid') {
+          loanCard.classList.add('paid');
+          statusEl.innerHTML = `
+            <div class="status-container">
+              <svg class="status-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.0857V12.0057C21.9988 14.1621 21.3005 16.2604 20.0093 17.9875C18.7182 19.7147 16.9033 20.9782 14.8354 21.5896C12.7674 22.201 10.5573 22.1276 8.53447 21.3803C6.51168 20.633 4.78465 19.2518 3.61096 17.4428C2.43727 15.6338 1.87979 13.4938 2.02168 11.342C2.16356 9.19029 2.99721 7.14205 4.39828 5.5028C5.79935 3.86354 7.69279 2.72111 9.79619 2.24587C11.8996 1.77063 14.1003 1.98806 16.07 2.86572"></path>
+                <path d="M22 4L12 14.01L9 11.01"></path>
+              </svg>
+              <span class="status-text">Paid</span>
+              <span class="status-pulse"></span>
+            </div>
+          `;
+        } else {
+          loanCard.classList.remove('paid');
+          statusEl.innerHTML = `
+            <div class="status-container">
+              <svg class="status-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"></path>
+                <path d="M12 6V12L16 14"></path>
+              </svg>
+              <span class="status-text">Pending</span>
+            </div>
+          `;
+        }
+      });
+    }
+
+    // Animation function
+    function animateLoans() {
+      // Reset all loans to pending first
+      loans.forEach(loan => {
+        loan.status = 'pending';
+      });
+      renderLoans();
+
+      // Alex Johnson at 1 second
+      setTimeout(() => {
+        loans[0].status = 'paid';
+        renderLoans();
+      }, 1000);
+
+      // Sarah Williams at 2 seconds
+      setTimeout(() => {
+        loans[1].status = 'paid';
+        renderLoans();
+      }, 2000);
+
+      // Michael Smith at 3 seconds
+      setTimeout(() => {
+        loans[2].status = 'paid';
+        renderLoans();
+      }, 3000);
+
+      // Reset animation after a total of 5.5 seconds (3 seconds for animation + 2.5 seconds pause)
+      setTimeout(() => {
+        setTimeout(animateLoans, 0); // Restart immediately after the pause
+      }, 5500); // 3 seconds for the animation + 2.5 seconds pause
+    }
+
+    // Start the animation when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLoans();
+      animateLoans();
+    });
+  </script>
+</body>
+</html>
