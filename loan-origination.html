@@ -253,7 +253,7 @@
 <body>
     <div class="container">
         <div class="animation-wrapper">
-            <!-- SVG Lines -->
+            <!-- SVG Lines with Rounded Corners -->
             <svg class="svg-lines" height="180" viewBox="0 0 300 180" preserveAspectRatio="none">
                 <!-- Define gradients -->
                 <defs>
@@ -262,7 +262,7 @@
                         <stop offset="100%" stop-color="var(--blue-11)" />
                     </linearGradient>
                     <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="var(--blue-4)" />
+                        <stop offset="0%" stop-color="var(--blue-6)" />
                         <stop offset="100%" stop-color="var(--blue-11)" />
                     </linearGradient>
                     <linearGradient id="lineGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -276,14 +276,14 @@
                     </linearGradient>
                 </defs>
                 
-                <!-- Line from Amex -->
-                <path id="amex-path" class="path" d="M 30 30 L 30 100 L 150 100 L 150 170" stroke="url(#lineGradient1)" stroke-width="2" fill="none" />
+                <!-- Line from Amex with rounded corners -->
+                <path id="amex-path" class="path" d="M 30 30 L 30 90 Q 30 100 40 100 L 140 100 Q 150 100 150 110 L 150 170" stroke="url(#lineGradient1)" stroke-width="2" fill="none" />
                 
-                <!-- Line from Car Loan -->
-                <path id="car-path" class="path path-car" d="M 150 30 L 150 100 L 150 170" stroke="url(#lineGradient2)" stroke-width="2" fill="none" />
+                <!-- Line from Car Loan (straight vertical line) -->
+                <path id="car-path" class="path" d="M 150 30 L 150 170" stroke="url(#lineGradient2)" stroke-width="2" fill="none" />
                 
-                <!-- Line from Klarna -->
-                <path id="klarna-path" class="path" d="M 270 30 L 270 100 L 150 100 L 150 170" stroke="url(#lineGradient3)" stroke-width="2" fill="none" />
+                <!-- Line from Klarna with rounded corners -->
+                <path id="klarna-path" class="path" d="M 270 30 L 270 90 Q 270 100 260 100 L 160 100 Q 150 100 150 110 L 150 170" stroke="url(#lineGradient3)" stroke-width="2" fill="none" />
                 
                 <!-- Horizontal connector line -->
                 <path id="horizontal-path" class="path" d="M 30 100 L 270 100" stroke="url(#horizontalGradient)" stroke-width="2" fill="none" />
