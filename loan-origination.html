@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlar Animation</title>
+    <!-- Import Satoshi font -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,300,400&display=swap" rel="stylesheet">
+    <style>
+        /* Define color variables */
+        :root {
+            --blue-1: #000;
+            --blue-2: #0b1316;
+            --blue-3: #10262d;
+            --blue-4: #11343f;
+            --blue-5: #1d424d;
+            --blue-6: #2c505c;
+            --blue-7: #3e626e;
+            --blue-8: #547985;
+            --blue-9: #142a31;
+            --blue-10: #1c404c;
+            --blue-11: #9ac1cf;
+            --blue-12: #c7eaf5;
+        }
+
+        /* General styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            background-color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .animation-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 24rem;
+        }
+
+        /* SVG Lines */
+        .svg-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 0;
+        }
+
+        .path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        .path.animate {
+            animation: dash 1.5s forwards;
+        }
+
+        .path-car {
+            stroke-width: 2.5;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Logo containers */
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-box {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 0.5rem;
+            opacity: 0;
+            transform: translateY(-1.25rem);
+        }
+
+        .logo-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .logo-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Logo specific styles */
+        .amex-logo {
+            background-color: #016FD0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .car-logo {
+            color: var(--blue-6);
+            width: 100%;
+            height: 100%;
+        }
+
+        .klarna-logo {
+            color: #FFB3C7;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Liabilities Card */
+        .liabilities-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(1.25rem);
+        }
+
+        .liabilities-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--blue-3);
+            margin-bottom: 1rem;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter {
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--blue-5);
+        }
+
+        .balance {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .balance-main {
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: var(--blue-4);
+        }
+
+        .balance-decimal {
+            font-size: 1.25rem;
+            color: var(--blue-7);
+            margin-left: 0.25rem;
+        }
+
+        .graph {
+            height: 5rem;
+            width: 100%;
+            position: relative;
+        }
+
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        .chart-line.animate {
+            animation: dash 1.5s forwards;
+            animation-delay: 0.1s;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (min-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .animation-wrapper {
+                max-width: 28rem;
+            }
+            
+            .logo-box {
+                width: 5rem;
+                height: 5rem;
+            }
+            
+            .card-title {
+                font-size: 1.75rem;
+            }
+            
+            .filter {
+                padding: 0.25rem 1.25rem;
+                font-size: 0.9375rem;
+            }
+            
+            .balance-main {
+                font-size: 2.5rem;
+            }
+            
+            .balance-decimal {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="animation-wrapper">
+            <!-- SVG Lines -->
+            <svg class="svg-lines" height="180" viewBox="0 0 300 180" preserveAspectRatio="none">
+                <!-- Define gradients -->
+                <defs>
+                    <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="var(--blue-6)" />
+                        <stop offset="100%" stop-color="var(--blue-11)" />
+                    </linearGradient>
+                    <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="var(--blue-4)" />
+                        <stop offset="100%" stop-color="var(--blue-11)" />
+                    </linearGradient>
+                    <linearGradient id="lineGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="var(--blue-7)" />
+                        <stop offset="100%" stop-color="var(--blue-11)" />
+                    </linearGradient>
+                    <linearGradient id="horizontalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="var(--blue-6)" />
+                        <stop offset="50%" stop-color="var(--blue-7)" />
+                        <stop offset="100%" stop-color="var(--blue-5)" />
+                    </linearGradient>
+                </defs>
+                
+                <!-- Line from Amex -->
+                <path id="amex-path" class="path" d="M 30 30 L 30 100 L 150 100 L 150 170" stroke="url(#lineGradient1)" stroke-width="2" fill="none" />
+                
+                <!-- Line from Car Loan -->
+                <path id="car-path" class="path path-car" d="M 150 30 L 150 100 L 150 170" stroke="url(#lineGradient2)" stroke-width="2" fill="none" />
+                
+                <!-- Line from Klarna -->
+                <path id="klarna-path" class="path" d="M 270 30 L 270 100 L 150 100 L 150 170" stroke="url(#lineGradient3)" stroke-width="2" fill="none" />
+                
+                <!-- Horizontal connector line -->
+                <path id="horizontal-path" class="path" d="M 30 100 L 270 100" stroke="url(#horizontalGradient)" stroke-width="2" fill="none" />
+            </svg>
+            
+            <!-- Logo containers -->
+            <div class="logo-container">
+                <!-- American Express Logo container -->
+<div id="amex-container" class="logo-box">
+    <div class="logo-content">
+        <div class="amex-logo">
+            <!-- Standard American Express logo -->
+            <svg width="80%" height="80%" viewBox="0 0 512 512" fill="none">
+                <rect x="40" y="120" width="432" height="272" rx="20" fill="#1F72CD"/>
+                <!-- Centurion face -->
+                <path d="M270 150H242L180 256L242 362H270L332 256L270 150Z" fill="white"/>
+                <!-- Left triangle -->
+                <path d="M140 150H100L162 256L100 362H140L202 256L140 150Z" fill="white"/>
+                <!-- Right text block -->
+                <rect x="320" y="220" width="100" height="72" fill="white"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+              
+                
+                <!-- Car Loan Logo -->
+                <div id="car-container" class="logo-box">
+                    <div class="logo-content">
+                        <svg class="car-logo" viewBox="0 0 640 512">
+                            <path fill="currentColor" d="M171.3 96H224v96H111.3l30.4-75.9C146.5 104 158.2 96 171.3 96zM272 192V96h81.2c9.7 0 18.9 4.4 25 12l67.2 84H272zm256.2 1L428.2 68c-18.2-22.8-45.8-36-75-36H171.3c-39.3 0-74.6 23.9-89.1 60.3L40.6 196.4C16.8 205.8 0 228.9 0 256v112c0 17.7 14.3 32 32 32h33.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80h130.6c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H608c17.7 0 32-14.3 32-32v-80c0-53-43-96-96-96h-16.2zM160 432c-26.5 0-48-21.5-48-48s21.5-48 48-48s48 21.5 48 48-21.5 48-48 48zm320 0c-26.5 0-48-21.5-48-48s21.5-48 48-48s48 21.5 48 48-21.5 48-48 48z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Klarna Logo -->
+                <div id="klarna-container" class="logo-box">
+                    <div class="logo-content">
+                        <svg class="klarna-logo" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M9.5 0a2.1 2.1 0 0 0-2.1 2.35h4.2A2.1 2.1 0 0 0 9.5 0m0 12a2.1 2.1 0 0 0 2.1-2.35H7.4A2.1 2.1 0 0 0 9.5 12M24 7.5h-3V0h-3v12h6zM0 0v12h3V7.5h1.5v-3H3V3h3V0Z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Liabilities Card -->
+            <div id="liabilities-card" class="liabilities-card">
+                <h2 class="card-title">Liabilities</h2>
+                
+                <!-- Filter controls -->
+                <div class="filters">
+                    <div class="filter">
+                        Last 7 days
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="filter">
+                        GBP
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Balance amount -->
+                <div class="balance">
+                    <span class="balance-main">£63,928</span>
+                    <span class="balance-decimal">.34</span>
+                </div>
+                
+                <!-- Graph -->
+                <div class="graph">
+                    <svg width="100%" height="100%" viewBox="0 0 300 80">
+                        <!-- Grey grid lines -->
+                        <line x1="0" y1="0" x2="300" y2="0" stroke="var(--blue-12)" stroke-width="1" />
+                        <line x1="0" y1="20" x2="300" y2="20" stroke="var(--blue-12)" stroke-width="1" />
+                        <line x1="0" y1="40" x2="300" y2="40" stroke="var(--blue-12)" stroke-width="1" />
+                        <line x1="0" y1="60" x2="300" y2="60" stroke="var(--blue-12)" stroke-width="1" />
+                        
+                        <!-- Chart line -->
+                        <path id="chart-line" class="chart-line" d="M 0,60 C 30,58 60,50 90,45 C 120,40 150,44 180,35 C 210,26 240,22 270,15 C 285,10 295,8 300,5" fill="none" stroke="var(--blue-11)" stroke-width="2" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation Sequence
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate logos appearing
+            setTimeout(function() {
+                document.getElementById('amex-container').classList.add('visible');
+            }, 500);
+            
+            setTimeout(function() {
+                document.getElementById('car-container').classList.add('visible');
+            }, 1200);
+            
+            setTimeout(function() {
+                document.getElementById('klarna-container').classList.add('visible');
+            }, 1900);
+            
+            // Animate connecting lines
+            setTimeout(function() {
+                document.getElementById('amex-path').classList.add('animate');
+                document.getElementById('car-path').classList.add('animate');
+                document.getElementById('klarna-path').classList.add('animate');
+                document.getElementById('horizontal-path').classList.add('animate');
+            }, 2600);
+            
+            // Animate Liabilities card and graph
+            setTimeout(function() {
+                document.getElementById('liabilities-card').classList.add('visible');
+                setTimeout(function() {
+                    document.getElementById('chart-line').classList.add('animate');
+                }, 300);
+            }, 3300);
+        });
+    </script>
+</body>
+</html>
