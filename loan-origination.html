@@ -231,6 +231,33 @@
             animation-delay: 0.1s;
         }
 
+        /* Fadeout animations for all elements */
+        /* For logo boxes */
+        .logo-box.visible.fadeout {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+        
+        /* For liabilities card */
+        .liabilities-card.visible.fadeout {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+        
+        /* For SVG paths */
+        .path.animate.fadeout {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+        
+        /* For chart line */
+        .chart-line.animate.fadeout {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
         /* Media Queries for Responsive Design */
         @media (min-width: 640px) {
             .container {
@@ -385,57 +412,78 @@
     <script>
     // Animation Sequence
     document.addEventListener('DOMContentLoaded', function() {
+        // Find all elements that need animation
+        const amexContainer = document.getElementById('amex-container');
+        const carContainer = document.getElementById('car-container');
+        const klarnaContainer = document.getElementById('klarna-container');
+        const amexPath = document.getElementById('amex-path');
+        const carPath = document.getElementById('car-path');
+        const klarnaPath = document.getElementById('klarna-path');
+        const horizontalPath = document.getElementById('horizontal-path');
+        const liabilitiesCard = document.getElementById('liabilities-card');
+        const chartLine = document.getElementById('chart-line');
         
+        // Animation controller function
         function runAnimation() {
-            // Reset all animations first
-            document.getElementById('amex-container').classList.remove('visible');
-            document.getElementById('car-container').classList.remove('visible');
-            document.getElementById('klarna-container').classList.remove('visible');
-            document.getElementById('amex-path').classList.remove('animate');
-            document.getElementById('car-path').classList.remove('animate');
-            document.getElementById('klarna-path').classList.remove('animate');
-            document.getElementById('horizontal-path').classList.remove('animate');
-            document.getElementById('liabilities-card').classList.remove('visible');
-            document.getElementById('chart-line').classList.remove('animate');
-            
-            // Start the animation sequence
-            setTimeout(function() {
-                document.getElementById('amex-container').classList.add('visible');
-            }, 500);
-            
-            setTimeout(function() {
-                document.getElementById('car-container').classList.add('visible');
-            }, 1200);
-            
-            setTimeout(function() {
-                document.getElementById('klarna-container').classList.add('visible');
-            }, 1900);
+            // Show logos sequentially
+            setTimeout(() => amexContainer.classList.add('visible'), 500);
+            setTimeout(() => carContainer.classList.add('visible'), 1200);
+            setTimeout(() => klarnaContainer.classList.add('visible'), 1900);
             
             // Animate connecting lines
-            setTimeout(function() {
-                document.getElementById('amex-path').classList.add('animate');
-                document.getElementById('car-path').classList.add('animate');
-                document.getElementById('klarna-path').classList.add('animate');
-                document.getElementById('horizontal-path').classList.add('animate');
+            setTimeout(() => {
+                amexPath.classList.add('animate');
+                carPath.classList.add('animate');
+                klarnaPath.classList.add('animate');
+                horizontalPath.classList.add('animate');
             }, 2600);
             
             // Animate Liabilities card and graph
-            setTimeout(function() {
-                document.getElementById('liabilities-card').classList.add('visible');
-                setTimeout(function() {
-                    document.getElementById('chart-line').classList.add('animate');
-                }, 300);
+            setTimeout(() => {
+                liabilitiesCard.classList.add('visible');
+                setTimeout(() => chartLine.classList.add('animate'), 300);
             }, 3300);
             
-            // Wait for animation to complete, then restart
-            setTimeout(function() {
-                runAnimation();
-            }, 9000); // Wait 9 seconds before restarting
+            // Start fading out everything before restarting
+            setTimeout(() => {
+                // Add the fadeout class to start the transition
+                setTimeout(() => {
+                amexContainer.classList.add('fadeout');
+                carContainer.classList.add('fadeout');
+                klarnaContainer.classList.add('fadeout');
+                liabilitiesCard.classList.add('fadeout');
+                }, 500); // 0.5 second delay
+                
+                // Fade out the lines by transitioning their opacity
+                amexPath.classList.add('fadeout');
+                carPath.classList.add('fadeout');
+                klarnaPath.classList.add('fadeout');
+                horizontalPath.classList.add('fadeout');
+                chartLine.classList.add('fadeout');
+                
+                // After fadeout completes, reset everything
+                setTimeout(() => {
+                    // Remove all classes
+                    amexContainer.classList.remove('visible', 'fadeout');
+                    carContainer.classList.remove('visible', 'fadeout');
+                    klarnaContainer.classList.remove('visible', 'fadeout');
+                    liabilitiesCard.classList.remove('visible', 'fadeout');
+                    
+                    amexPath.classList.remove('animate', 'fadeout');
+                    carPath.classList.remove('animate', 'fadeout');
+                    klarnaPath.classList.remove('animate', 'fadeout');
+                    horizontalPath.classList.remove('animate', 'fadeout');
+                    chartLine.classList.remove('animate', 'fadeout');
+                    
+                    // Wait a moment before starting the next cycle
+                    setTimeout(() => runAnimation(), 500);
+                }, 1500); // Wait for fadeout transition to complete
+            }, 8000); // Start fadeout after 8 seconds
         }
         
-        // Start the loop
+        // Start the animation loop
         runAnimation();
     });
-    </script>
+</script>
 </body>
 </html>
