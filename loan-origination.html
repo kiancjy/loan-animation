@@ -75,10 +75,25 @@
         }
 
         @keyframes dash {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+        /* Reset rule to make looping work */
+        @keyframes reset-dash {
             to {
-                stroke-dashoffset: 0;
+                stroke-dashoffset: 3000;
             }
         }
+
+        .path.reset {
+            animation: reset-dash 0s forwards;
+    }
+
+        .chart-line.reset {
+            animation: reset-dash 0s forwards;
+    }
 
         /* Logo containers */
         .logo-container {
@@ -366,10 +381,24 @@
         </div>
     </div>
 
+
     <script>
-        // Animation Sequence
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate logos appearing
+    // Animation Sequence
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        function runAnimation() {
+            // Reset all animations first
+            document.getElementById('amex-container').classList.remove('visible');
+            document.getElementById('car-container').classList.remove('visible');
+            document.getElementById('klarna-container').classList.remove('visible');
+            document.getElementById('amex-path').classList.remove('animate');
+            document.getElementById('car-path').classList.remove('animate');
+            document.getElementById('klarna-path').classList.remove('animate');
+            document.getElementById('horizontal-path').classList.remove('animate');
+            document.getElementById('liabilities-card').classList.remove('visible');
+            document.getElementById('chart-line').classList.remove('animate');
+            
+            // Start the animation sequence
             setTimeout(function() {
                 document.getElementById('amex-container').classList.add('visible');
             }, 500);
@@ -397,7 +426,16 @@
                     document.getElementById('chart-line').classList.add('animate');
                 }, 300);
             }, 3300);
-        });
+            
+            // Wait for animation to complete, then restart
+            setTimeout(function() {
+                runAnimation();
+            }, 9000); // Wait 9 seconds before restarting
+        }
+        
+        // Start the loop
+        runAnimation();
+    });
     </script>
 </body>
 </html>
